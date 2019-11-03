@@ -2,25 +2,65 @@ package com.example.animalespets.data;
 
 import android.provider.BaseColumns;
 
-public final  class pets {
+public final class pets {
 
-    public final  class pets_entry implements BaseColumns {
+    // To prevent someone from accidentally instantiating the contract class,
+    // give it an empty constructor.
+    private pets() {}
 
-        public static final String Table_Name = "shelter";
+    /**
+     * Inner class that defines constant values for the pets database table.
+     * Each entry in the table represents a single pet.
+     */
+    public static final class PetEntry implements BaseColumns {
 
-        public static final String _ID ="id";
-        public static final String COLUMN_PET_NAME ="Name";
-        public static final String COLUMN_PET_BREED ="Breed";
-        public static final String COLUMN_PET_GENDER ="Gender";
-        public static final String COLUMN_PET_WEIGHT ="weight";
+        /** Name of database table for pets */
+        public final static String TABLE_NAME = "pets";
 
+        /**
+         * Unique ID number for the pet (only for use in the database table).
+         *
+         * Type: INTEGER
+         */
+        public final static String _ID = BaseColumns._ID;
 
-        public  static  final int GENDER_UNKNOWN=0;
-        public  static  final int GENDER_MALE=1;
-        public  static  final int GENDER_FEMALE=2;
+        /**
+         * Name of the pet.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PET_NAME ="name";
 
+        /**
+         * Breed of the pet.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_PET_BREED = "breed";
 
+        /**
+         * Gender of the pet.
+         *
+         * The only possible values are {@link #GENDER_UNKNOWN}, {@link #GENDER_MALE},
+         * or {@link #GENDER_FEMALE}.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_PET_GENDER = "gender";
 
+        /**
+         * Weight of the pet.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_PET_WEIGHT = "weight";
 
+        /**
+         * Possible values for the gender of the pet.
+         */
+        public static final int GENDER_UNKNOWN = 0;
+        public static final int GENDER_MALE = 1;
+        public static final int GENDER_FEMALE = 2;
     }
+
 }

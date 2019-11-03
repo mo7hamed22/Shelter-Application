@@ -6,35 +6,37 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.jar.Attributes;
 
-import static com.example.animalespets.data.pets.pets_entry._ID;
+import static com.example.animalespets.data.pets.PetEntry._ID;
 
 public class PetDbHelper extends SQLiteOpenHelper {
-    private static final int db_version =1;
+    public static final String LOG_TAG = PetDbHelper.class.getSimpleName();
 
-    public static final String db_Name="petsdb";
-    private static final String SQL_CREATE_ENTERIES = "CREATE TABLE "+ pets.pets_entry.Table_Name + "("
-            + _ID +" INTEGER PRIMARY KEY AUTOINCREMENT ,"
-            + pets.pets_entry.COLUMN_PET_NAME +"text not null ,"
-            + pets.pets_entry.COLUMN_PET_BREED +"TEXT  ,"
-            + pets.pets_entry.COLUMN_PET_GENDER+"INTGER NOT NULL ,"
-            + pets.pets_entry.COLUMN_PET_WEIGHT+"INTGER NOT NULL DEFAULT 0);" ;
+    private static final String DATABASE_NAME = "shelter.db";
 
+    private static final int DATABASE_VERSION = 1;
     public PetDbHelper(Context context) {
-        super(context, db_Name, null, db_version);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTERIES);
+        // Create a String that contains the SQL statement to create the pets table
+    String SQL_CREATE_PETS_TABLE =  "CREATE TABLE " + pets.PetEntry.TABLE_NAME + " ("
+            + pets.PetEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            +  pets.PetEntry.COLUMN_PET_NAME + " TEXT NOT NULL, "
+            +  pets.PetEntry.COLUMN_PET_BREED + " TEXT, "
+            +  pets.PetEntry.COLUMN_PET_GENDER + " INTEGER NOT NULL, "
+            +  pets.PetEntry.COLUMN_PET_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
 
+    // Execute the SQL statement
+        db.execSQL(SQL_CREATE_PETS_TABLE);
+}
 
-    }
-
+    /**
+     * This is called when the database needs to be upgraded.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_CREATE_ENTERIES);
-        onUpgrade(db,oldVersion,newVersion);
-
-
+        // The database is still at version 1, so there's nothing to do be done here.
     }
 }
