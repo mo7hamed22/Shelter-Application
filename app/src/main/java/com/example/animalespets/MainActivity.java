@@ -2,15 +2,18 @@ package com.example.animalespets;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        mDbHelper = new PetDbHelper(this);
+        //mDbHelper = new PetDbHelper(this);
       //  displayDatabaseInfo();
     }
     @Override
@@ -50,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private void displayDatabaseInfo() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        PetDbHelper mDbHelper = new PetDbHelper(this);
+        //PetDbHelper mDbHelper = new PetDbHelper(this);
 
         // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+       // SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // Perform this raw SQL query "SELECT * FROM pets"
         // to get a Cursor that contains all rows from the pets table.
@@ -66,10 +69,25 @@ public class MainActivity extends AppCompatActivity {
         };
 //        String Selection =pets.PetEntry.COLUMN_PET_GENDER +"=? ;";
 //        int[] SelectionArgs = new String[]{pets.PetEntry.GENDER_FEMALE};
-        Cursor cursor = db.query(pets.PetEntry.TABLE_NAME,Projection,
-                null,null,null,null,null);
-        TextView displayView = (TextView) findViewById(R.id.text_view_pet);
+       /** Cursor cursor = db.query(pets.PetEntry.TABLE_NAME,Projection,
+                null,null,null,null,null);*/
 
+       //provide query using ContentResolver
+      Cursor cursor= getContentResolver().query(pets.PetEntry.CONTENT_URI,Projection,
+              null,null,null);
+      //Find List View
+        ListView petListView = (ListView) findViewById(R.id.list);
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
+        // Attach the adapter to the ListView.
+        petListView.setAdapter(adapter);
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+      /*  View emptyView = findViewById(R.id.empty_view);
+        petListView.setEmptyView(emptyView);*/
+    }
+
+     /**   TextView displayView = (TextView) findViewById(R.id.text_view_pet);
+      ListView petListView = (ListView) findViewById(R.id.list);
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
@@ -116,10 +134,12 @@ public class MainActivity extends AppCompatActivity {
             // resources and makes it invalid.
             cursor.close();
         }
-    }
+    }**/
+
+
     private void insertPet() {
         // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+/*        SQLiteDatabase db = mDbHelper.getWritableDatabase();*/
 
         // Create a ContentValues object where column names are the keys,
         // and Toto's pet attributes are the values.
@@ -136,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-        long newRowId = db.insert(pets.PetEntry.TABLE_NAME, null, values);
+        Uri newuri = getContentResolver().insert(pets.PetEntry.CONTENT_URI, values);
     }
 
     @Override
